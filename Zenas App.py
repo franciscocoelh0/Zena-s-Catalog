@@ -1,7 +1,15 @@
 import streamlit as st
 from snowflake.snowpark.context import get_active_session
-from snowflake.snowpark.functions import col
-import pandas as pd
+from snowflake.snowpark import Session
+
+# Function to get the session
+def get_session():
+    try:
+        # Check if we are running inside Snowflake
+        return get_active_session()
+    except:
+        # If not, create a session using Streamlit Secrets
+        return Session.builder.configs(st.secrets["snowflake"]).create()
 
 st.title("Zena's Amazing Athleisure Catalog")
 
