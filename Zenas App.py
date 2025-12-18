@@ -1,5 +1,4 @@
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark import Session
 
 # Function to get the session
@@ -13,7 +12,11 @@ def get_session():
 
 st.title("Zena's Amazing Athleisure Catalog")
 
-session = get_active_session()
+# This creates a new session using the credentials in your Streamlit Secrets
+session = Session.builder.configs(st.secrets["snowflake"]).create()
+
+# Your existing code can now continue using this 'session' object
+table_colors = session.sql("select color_or_style from catalog_for_website").collect()
 
 # get a list of colors for a drop list selection
 table_colors = session.sql("select color_or_style from catalog_for_website")
